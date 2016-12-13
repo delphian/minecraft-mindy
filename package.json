@@ -1,0 +1,15 @@
+{
+  "name": "minecraft-mindy",
+  "version": "0.0.1",
+  "description": "Minecraft twitch integration bot",
+  "main": "mindy.js",
+  "scripts": {},
+  "author": "Bryan Hazelbaker",
+  "license": "MIT",
+  "dependencies": {
+    "minecraft-protocol": "^1.1.1",
+    "tmi.js": "^1.1.2"
+  },
+  "devDependencies": {}
+}
+
