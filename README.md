@@ -10,14 +10,14 @@ Minecraft bot providing integration with twitch. Allows twitch viewers to alter 
 
 ### Installation
 
-`
+```
 git clone https://github.com/delphian/minecraft-mindy.git
 cd minecraft-mindy
 npm install
 cd config
 cp twitch-sample.js twitch.js
 cp minecraft-sample.js minecraft.js
-`
+```
 
 ### Configuration
 
