@@ -17,7 +17,7 @@ var twitch = new tmi.client({
     password: ""
   },
   // Channel bot should join (your twitch name)
-  channels: ["MindyTheMinion"]
+  channels: [""]
 });
 twitch.connect();
 
