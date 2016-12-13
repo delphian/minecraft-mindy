@@ -3,8 +3,6 @@ var tmi = require('tmi.js');
 var minecraft = require('./config/minecraft');
 var twitch = require('./config/twitch');
 
-console.log(twitch);
-
 /**
  * Minecraft
  */
