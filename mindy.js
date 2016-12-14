@@ -37,18 +37,16 @@ twitch.on('chat', function(channel, user, message, self) {
     } else if (message == 'clear') {
         minecraft.write('chat', { message: '/weather clear' });
     } else if (message == 'slime') {
-        minecraft.write('chat', { message: '/execute @a ~1 ~3 ~ /summon minecraft:slime ~1 ~3 ~ {Size:0,CustomName:"Twitch Slime",CustomNameVisible:1,Glowing:1,Health:20,Attributes:[{Name:"generic.movementSpeed",Base:1f},{Name:"generic.attackDamage",Base:0}],HandDropChances:[2F,2F],HandItems:[{id:"minecraft:apple",tag:{display:{Name:"Twitch Apple"}},Count:1},{}]}' });
-        twitch.action(twitch.opts.channels[0], "Summoning slimes around each player.");
+        minecraft.write('chat', { message: '/execute @a ~2 ~3 ~2 /summon minecraft:slime ~2 ~3 ~2 {Size:0,CustomName:"' + user.username + ' Slime",CustomNameVisible:1,Glowing:1}' });
         minecraft.write('chat', { message: user.username + " has summoned slimes!" });
-    } else if (message == 'lightning') {
-        twitch.action(twitch.opts.channels[0], "Your anger will be displayed!");
-        minecraft.write('chat', { message: '/execute @a ~ ~ ~ /summon LightingBolt' });
-        minecraft.write('chat', { message: "You have been cursed by the god " + user.username + "!!!" });
+    } else if (message == 'blind') {
+        minecraft.write('chat', { message: '/effect @a blindness");
+        minecraft.write('chat', { message: 'The god ' + user.username + ' has cursed you for your many sins!' });
     } else if (message == 'help') {
         twitch.action(twitch.opts.channels[0], "'rain' - make weather rainy.");
         twitch.action(twitch.opts.channels[0], "'clear' - make weather clear.");
         twitch.action(twitch.opts.channels[0], "'slime' - summon attack slimes.");
-        twitch.action(twitch.opts.channels[0], "'lightning' - strike players with lighting.");
+        twitch.action(twitch.opts.channels[0], "'blind' - strike players blind.");
     } else {
         minecraft.write('chat', { message: '[' + user.username + '] ' + message });
     }
