@@ -19,11 +19,9 @@ minecraft.on('chat', function(packet) {
 minecraft.on('login', function(first, second) {
     console.log('Connected... ' + JSON.stringify(first, null, 4));
 });
-/*
-minecraft.on('packet', function(packet) {
-    console.log(packet);
+minecraft.on('end', function(packet) {
+    console.log("Disconnected from minecraft.");
 });
-*/
 
 /**
  * Twitch
@@ -40,13 +38,18 @@ twitch.on('chat', function(channel, user, message, self) {
         minecraft.write('chat', { message: '/execute @a ~2 ~3 ~2 /summon minecraft:slime ~2 ~3 ~2 {Size:0,CustomName:"' + user.username + ' Slime",CustomNameVisible:1,Glowing:1}' });
         minecraft.write('chat', { message: user.username + " has summoned slimes!" });
     } else if (message == 'blind') {
-        minecraft.write('chat', { message: '/effect @a blindness');
+        minecraft.write('chat', { message: '/effect @a blindness' });
         minecraft.write('chat', { message: 'The god ' + user.username + ' has cursed you for your many sins!' });
+    } else if (message == 'nausea') {
+        minecraft.write('chat', { message: '/effect @a Nausea' });
+    } else if (message == 'particle hugeexplosion') {
+        minecraft.write('chat', { message: '/execute @a ~ ~ ~ /particle hugeexplosion ~ ~ ~ 0 0 0 0' });
     } else if (message == 'help') {
         twitch.action(twitch.opts.channels[0], "'rain' - make weather rainy.");
         twitch.action(twitch.opts.channels[0], "'clear' - make weather clear.");
         twitch.action(twitch.opts.channels[0], "'slime' - summon attack slimes.");
         twitch.action(twitch.opts.channels[0], "'blind' - strike players blind.");
+        twitch.action(twitch.opts.channels[0], "'nausea' - make players sick.");
     } else {
         minecraft.write('chat', { message: '[' + user.username + '] ' + message });
     }
