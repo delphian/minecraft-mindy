@@ -16,8 +16,8 @@ minecraft.on('chat', function(packet) {
         twitch.action(twitch.opts.channels[0], '[' + username + '] ' + msg);
     }
 });
-minecraft.on('login', function(first, second) {
-    console.log('Connected... ' + JSON.stringify(first, null, 4));
+minecraft.on('login', function() {
+    console.log('Connected to minecraft... ');
 });
 /*
 minecraft.on('packet', function(packet) {
