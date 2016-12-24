@@ -19,8 +19,20 @@ minecraft.on('chat', function(packet) {
 minecraft.on('login', function(first, second) {
     console.log('Connected... ' + JSON.stringify(first, null, 4));
 });
-minecraft.on('end', function(packet) {
-    console.log("Disconnected from minecraft.");
+/*
+minecraft.on('packet', function(packet) {
+    console.log(packet);
+});
+*/
+minecraft.on('error', function(error) {
+    console.log("Error: " + error);
+});
+minecraft.on('disconnect', function(packet) {
+    console.log('Minecraft login failed! ' + JSON.parse(packet.reason).text);
+});
+minecraft.on('end', function() {
+    console.log('Disconnected from minecraft.');
+    twitch.action(twitch.opts.channels[0], "Oh no! I've been disconnected from minecraft!");
 });
 
 /**
