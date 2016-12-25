@@ -7,9 +7,9 @@
   "author": "Bryan Hazelbaker",
   "license": "MIT",
   "dependencies": {
+    "events": "^1.1.1",
     "minecraft-protocol": "^1.1.1",
     "tmi.js": "^1.1.2"
   },
   "devDependencies": {}
 }
-
