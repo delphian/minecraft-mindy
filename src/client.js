@@ -47,19 +47,33 @@ class MindyBot extends eventEmitter {
             mb.mChat(username + ' has parted twitch.');
         });
         this.twitch.on('chat', function(channel, user, message, self) {
+            var words = message.split(' ');
             var keys = Object.keys(twitchEvents.events);
+            // General help request.
             if (message == 'help') {
-                var commands = 'Type the following commands to affect minecraft players: ';
+                mb.tChat('Type \'help {command}\' to learn more about each command.');
+                var commands = 'Commands: ';
                 for (var i=0; i < keys.length; i++) {
                     commands = commands + keys[i] + ", ";
                 }
+                commands = commands.substring(0, commands.length - 1);
                 mb.tChat(commands);
             }
+            // Help for a specific command.
+            else if (words[0] == 'help') {
+                if (keys.indexOf(words[1]) > -1) {
+                    mb.tChat(twitchEvents.events[words[1]].help);
+                } else {
+                    mb.tChat('Unknown command: \'' + words[1] + '\'')
+                }
+            }
+            // Execute a command.
             else if (keys.indexOf(message) > -1) {
                 var tEvent = twitchEvents.events[message];
                 for (var i=0; i < tEvent.responses.length; i++) {
                     mb.respond(user, message, message, tEvent.responses[i]);
                 }
+            // Relay regular chat message from twitch to minecraft.
             } else {
                 mb.mChat('[' + user.username + '] ' + message);
             }
