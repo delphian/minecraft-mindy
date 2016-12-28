@@ -1,5 +1,37 @@
 module.exports = {
     events: {
+        "rain": {
+	    command: 'rain',
+            cost: 1,
+            help: 'Make it rain!',
+            responses: [
+                {
+                    delay: 0,
+                    say: {
+                        where: 'minecraft',
+                        text: [
+                            '/weather rain'
+                        ]
+                    }
+                }
+            ]
+	},
+        "clear": {
+            command: 'clear',
+            cost: 1,
+            help: 'Clear the weather.',
+            responses: [
+                {
+                    delay: 0,
+                    say: {
+                        where: 'minecraft',
+                        text: [
+                            '/weather clear'
+                        ]
+                    }
+                }
+            ]
+        },
         "blindness": {
             command: 'blindness',
             cost: 1,
