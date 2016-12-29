@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "events": "^1.1.1",
+    "flat-file-db": "^1.0.0",
     "minecraft-protocol": "^1.1.1",
     "tmi.js": "^1.1.2"
   },

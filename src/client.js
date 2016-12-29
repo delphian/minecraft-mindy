@@ -1,11 +1,21 @@
 var eventEmitter = require('events');
 var twitchEvents = require('./twitch-events');
+var flatfile = require('flat-file-db');
 
 class MindyBot extends eventEmitter {
     constructor() {
         super();
-        this.minecraft = require('../config/minecraft');
-        this.twitch = require('../config/twitch');
+        var mb = this;
+        mb.minecraft = require('../config/minecraft');
+        mb.twitch = require('../config/twitch');
+        mb.db = flatfile('./db/data.db');
+        process.on('SIGINT', function() {
+            console.log("Caught interrupt signal");
+            mb.db.close();
+            mb.db.on('close', function() {
+                process.exit();
+            })
+        });        
     }
     mChat(message) {
         this.minecraft.write('chat', { message: message });
@@ -41,10 +51,33 @@ class MindyBot extends eventEmitter {
             mb.tChat('Hello! I\'m a bot. Type \'help\' for information.');
         });
         this.twitch.on('join', function(channel, username, self) {
-            mb.mChat(username + ' has joined twitch.');
+            var account = {
+                "joins": 1,
+                "points": 0,
+                "lastSeen": null
+            };
+            if (mb.db.has(username)) {
+                var record;
+                try {
+                    record = JSON.parse(mb.db.get(username));
+                    account = record;
+                    account.joins = account.joins + 1;
+                } catch(e) {
+                    mb.mChat('Corrupted ' + username + ' database record is being reset!');
+                    console.log(record);
+                }
+            }
+            mb.db.put(username, JSON.stringify(account));
+            var info = username + ' joined chat, was last seen ' 
+                + ((account.lastSeen === null) ? '<never>' : account.lastSeen) + ' and been here '
+                + account.joins + ' times.';
+            mb.mChat(info);
         });
         this.twitch.on('part', function(channel, username, self) {
-            mb.mChat(username + ' has parted twitch.');
+            mb.mChat(username + ' left chat.');
+            var account = JSON.parse(mb.db.get(username));
+            account.lastSeen = Date.now();
+            mb.db.put(username, JSON.stringify(account));
         });
         this.twitch.on('chat', function(channel, user, message, self) {
             var words = message.split(' ');

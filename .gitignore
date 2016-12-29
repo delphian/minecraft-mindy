@@ -1,3 +1,4 @@
 node_modules
 config/minecraft.js
 config/twitch.js
+db/*
