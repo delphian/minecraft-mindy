@@ -1,7 +1,39 @@
 module.exports = {
     events: {
+        "day": {
+            command: 'day',
+            cost: 1,
+            help: 'Command the sun to its morning position.',
+            responses: [
+                {
+                    delay: 0,
+                    say: {
+                        where: 'minecraft',
+                        text: [
+                            '/time set 0'
+                        ]
+                    }
+                }
+            ]
+        },
+        "night": {
+            command: 'night',
+            cost: 1,
+            help: 'Summon the moon into the sky.',
+            responses: [
+                {
+                    delay: 0,
+                    say: {
+                        where: 'minecraft',
+                        text: [
+                            '/time set 12000'
+                        ]
+                    }
+                }
+            ]
+        },
         "rain": {
-	    command: 'rain',
+	        command: 'rain',
             cost: 1,
             help: 'Make it rain!',
             responses: [
@@ -15,7 +47,7 @@ module.exports = {
                     }
                 }
             ]
-	},
+	    },
         "clear": {
             command: 'clear',
             cost: 1,
