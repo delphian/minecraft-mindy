@@ -190,7 +190,7 @@ mindyBot.on('dataDrivenEvent', function(mindyEvent, tEvent) {
     var account = this.getUser(mindyEvent.username);
     if (account != null || mindyEvent.where == 'minecraft') {
         if (mindyEvent.where == 'minecraft' || (account.points >= tEvent.cost)) {
-            if (typeof(account['points']) !== 'undefined') {
+            if (account !== null && typeof(account['points']) !== 'undefined') {
                 account.points = account.points - 1;
                 mindyEvent.bot.db.put(mindyEvent.username, JSON.stringify(account));
                 mindyEvent.Chat(mindyEvent.username + ' has ' + account.points + ' points left.');
