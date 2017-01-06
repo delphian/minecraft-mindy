@@ -10,6 +10,7 @@
     "events": "^1.1.1",
     "flat-file-db": "^1.0.0",
     "minecraft-protocol": "^1.1.1",
+    "moment": "^2.17.1",
     "tmi.js": "^1.1.2"
   },
   "devDependencies": {}

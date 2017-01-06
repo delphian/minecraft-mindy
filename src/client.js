@@ -2,6 +2,7 @@ var eventEmitter = require('events');
 var twitchEvents = require('./twitch-events');
 var MindyEvent = require('./mindy-event');
 var flatfile = require('flat-file-db');
+var moment = require('moment');
 
 class MindyBot extends eventEmitter {
     constructor() {
@@ -102,10 +103,6 @@ class MindyBot extends eventEmitter {
                 mb.mChat(username + ' earned 5 points. Joining chat for the first time!');
             }
             mb.db.put(username, JSON.stringify(account));
-            var info = username + ' joined chat, was last seen ' 
-                + ((account.lastSeen === null) ? '<never>' : account.lastSeen) + ' and been here '
-                + account.joins + ' times.';
-            mb.mChat(info);
         });
         this.twitch.on('part', function(channel, username, self) {
             mb.mChat(username + ' left chat.');
@@ -161,6 +158,22 @@ class MindyBot extends eventEmitter {
 }
 
 var mindyBot = new MindyBot();
+
+mindyBot.on('!info', function(mindyEvent) {
+    var mb = this;
+    var account = (mindyEvent.words.length >= 2) ?
+                  this.getUser(mindyEvent.words[1]) :
+                  this.getUser(mindyEvent.username);
+    if (account == null) {
+        mindyEvent.Chat('Unknown user.');
+    } else {
+        mindyEvent.Chat(
+            mindyEvent.username + ' has ' + account.points + ' points, ' +
+            account.joins + ' visits, ' +
+            'and was last seen ' + moment(account.lastSeen).fromNow()
+        );
+    }
+});
 
 mindyBot.on('help', function(mindyEvent) {
     var mb = this;
