@@ -1,7 +1,7 @@
 module.exports = {
     events: {
-        "day": {
-            command: 'day',
+        "!day": {
+            command: '!day',
             cost: 1,
             help: 'Command the sun to its morning position.',
             responses: [
@@ -16,8 +16,8 @@ module.exports = {
                 }
             ]
         },
-        "night": {
-            command: 'night',
+        "!night": {
+            command: '!night',
             cost: 1,
             help: 'Summon the moon into the sky.',
             responses: [
@@ -32,8 +32,8 @@ module.exports = {
                 }
             ]
         },
-        "rain": {
-	        command: 'rain',
+        "!rain": {
+	        command: '!rain',
             cost: 1,
             help: 'Make it rain!',
             responses: [
@@ -48,8 +48,8 @@ module.exports = {
                 }
             ]
 	    },
-        "clear": {
-            command: 'clear',
+        "!clear": {
+            command: '!clear',
             cost: 1,
             help: 'Clear the weather.',
             responses: [
@@ -64,8 +64,8 @@ module.exports = {
                 }
             ]
         },
-        "blindness": {
-            command: 'blindness',
+        "!blindness": {
+            command: '!blindness',
             cost: 1,
             help: 'Strike player blind.',
             responses: [
@@ -91,8 +91,8 @@ module.exports = {
                 }
             ],
         },
-        "slowness": {
-            command: 'slowness',
+        "!slowness": {
+            command: '!slowness',
             cost: 1,
             help: 'Decreases walking spead.',
             responses: [
@@ -118,8 +118,8 @@ module.exports = {
                 }
             ],
         },
-        "mining_fatigue": {
-            command: 'mining_fatigue',
+        "!mining_fatigue": {
+            command: '!mining_fatigue',
             cost: 1,
             help: 'Decreases mining and attack speed.',
             responses: [
@@ -144,8 +144,8 @@ module.exports = {
                 }
             ],
         },
-        "pigman": {
-            command: 'pigman',
+        "!pigman": {
+            command: '!pigman',
             cost: 1,
             help: 'Conjur warrior pigman riding a skeleton horse.',
             responses: [
@@ -160,8 +160,8 @@ module.exports = {
                 }
             ]
         },
-        "slime": {
-            command: 'slime',
+        "!slime": {
+            command: '!slime',
             cost: 1,
             help: 'Summon evil attack slimes to annoy our adventurer.',
             responses: [
