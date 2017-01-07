@@ -1,10 +1,8 @@
 var eventEmitter = require('events');
-var twitchEvents = require('./twitch-events');
 var MindyEvent = require('./mindy-event');
 var AccountRepo = require('./accounts/account-repository');
 var Account = require('./accounts/account');
 var flatfile = require('flat-file-db');
-var moment = require('moment');
 
 class MindyBot extends eventEmitter {
     constructor() {
@@ -13,7 +11,10 @@ class MindyBot extends eventEmitter {
         this.minecraft = require('../config/minecraft');
         this.twitch = require('../config/twitch');
         this.db = flatfile('./db/data.db');
+        // Account (users) CRUD repository.
         this.accountRepo = new AccountRepo(this.db);
+        // Data driven (json configured) chat commands.
+        this.commands = require('./commands');
         process.on('SIGINT', function() {
             console.log("Caught interrupt signal");
             mb.db.close();
@@ -63,9 +64,9 @@ class MindyBot extends eventEmitter {
                         })
                     );
                 // Execute a data driven handled event.
-                } else if (typeof(twitchEvents.events[words[0]]) !== 'undefined') {
+                } else if (typeof(mb.commands.events[words[0]]) !== 'undefined') {
                     mb.emit(
-                        'dataDrivenEvent',
+                        '_commandEvent',
                         new MindyEvent({
                             "message": msg,
                             "words": words,
@@ -73,7 +74,7 @@ class MindyBot extends eventEmitter {
                             "username": username,
                             "bot": mb
                         }),
-                        twitchEvents.events[words[0]]
+                        mb.commands.events[words[0]]
                     );
                 // Relay regular chat message from minecraft to twitch.
                 } else {
@@ -102,7 +103,7 @@ class MindyBot extends eventEmitter {
         });
         this.twitch.on('part', function(channel, username, self) {
             mb.mChat(username + ' left chat.');
-            var account = mb.accountRepo.load(username);
+            var account = mb.accountRepo.read(username);
             account.lastSeen = Date.now();
             mb.accountRepo.update(username, account);
         });
@@ -121,9 +122,9 @@ class MindyBot extends eventEmitter {
                     })
                 );
             // Execute a data driven handled event.
-            } else if (typeof(twitchEvents.events[words[0]]) !== 'undefined') {
+            } else if (typeof(mb.commands.events[words[0]]) !== 'undefined') {
                 mb.emit(
-                    'dataDrivenEvent',
+                    '_commandEvent',
                     new MindyEvent({
                         "message": message,
                         "words": words,
@@ -131,7 +132,7 @@ class MindyBot extends eventEmitter {
                         "username": user.username,
                         "bot": mb
                     }),
-                    twitchEvents.events[words[0]]
+                    mb.commands.events[words[0]]
                 );
             // Relay regular chat message from twitch to minecraft.
             } else {
@@ -139,99 +140,8 @@ class MindyBot extends eventEmitter {
             }
         });
     }
-    /**
-     * Retrieve user information from the database, or null if not found.
-     */
-    getUser(userName) {
-        return this.accountRepo.read(userName);
-    }
 }
 
 var mindyBot = new MindyBot();
-
-mindyBot.on('!info', function(mindyEvent) {
-    var mb = this;
-    var account = (mindyEvent.words.length >= 2) ?
-                  this.getUser(mindyEvent.words[1]) :
-                  this.getUser(mindyEvent.username);
-    if (account == null) {
-        mindyEvent.Chat('Unknown user.');
-    } else {
-        mindyEvent.Chat(
-            mindyEvent.username + ' has ' + account.points + ' points, ' +
-            account.joins + ' visits, ' +
-            'and was last seen ' + moment(account.lastSeen).fromNow()
-        );
-    }
-});
-
-mindyBot.on('!help', function(mindyEvent) {
-    var mb = this;
-    var keys = Object.keys(twitchEvents.events);
-    // General help request.
-    if (mindyEvent.message == '!help') {
-        mindyEvent.Chat('Type \'!help {command}\' to learn more about each command.');
-        var commands = 'Commands: ';
-        for (var i=0; i < keys.length; i++) {
-            commands = commands + keys[i] + ", ";
-        }
-        commands = commands.substring(0, commands.length - 1);
-        mindyEvent.Chat(commands);
-    // Help for a specific data driven command.
-    } else {
-        if (keys.indexOf(mindyEvent.words[1]) > -1) {
-            var info = twitchEvents.events[mindyEvent.words[1]].help 
-                     + ' (cost: ' + twitchEvents.events[mindyEvent.words[1]].cost + ')';
-            mindyEvent.Chat(info);
-        } else {
-            mindyEvent.Chat('Unknown command: \'' + mindyEvent.words[1] + '\'')
-        }
-    }
-});
-
-mindyBot.on('dataDrivenEvent', function(mindyEvent, tEvent) {
-    var account = this.getUser(mindyEvent.username);
-    if (account != null || mindyEvent.where == 'minecraft') {
-        if (mindyEvent.where == 'minecraft' || (account.points >= tEvent.cost)) {
-            if (account !== null && typeof(account['points']) !== 'undefined') {
-                account.points = account.points - 1;
-                this.accountRepo.update(mindyEvent.username, account);
-                mindyEvent.Chat(mindyEvent.username + ' has ' + account.points + ' points left.');
-            }
-            for (var i=0; i < tEvent.responses.length; i++) {
-                mindyEvent.bot.emit('dataDrivenResponse', mindyEvent, tEvent.responses[i]);
-            }
-        } else {
-            mindyEvent.Chat(mindyEvent.username + ', you don\'t have enough points for that!');
-        }
-    } else {
-        mindyEvent.Chat('Cant retrieve account details for ' + mindyEvent.username + '. Who are you??');
-    }
-});
-
-/**
- * Process a single response to a data driven (json configured) chat event.
- *
- * Multiple responses may be issued to a single chat event.
- */
-mindyBot.on('dataDrivenResponse', function(mindyEvent, response) {
-    var mb = this;
-    setTimeout(function() {
-        if (typeof(response['say']) != 'undefined') {
-            var index = Math.floor(Math.random() * response.say.text.length);
-            var msg = response.say.text[index];
-            msg = msg.replace('$0', mindyEvent.username);
-            if (response.say.where == 'minecraft') {
-                mb.mChat(msg);
-            } else if (response.say.where == 'twitch') {
-                mb.tChat(msg);
-            } else {
-                console.log('Unknown say location.');
-            }
-        } else {
-            console.log('Unknown data driven execute verb.');
-        }
-    }, response.delay);
-});
 
 module.exports = mindyBot;
