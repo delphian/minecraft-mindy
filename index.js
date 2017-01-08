@@ -11,7 +11,7 @@ mindyBot.on('!info', function(mindyEvent) {
         mindyEvent.Chat('Unknown user.');
     } else {
         mindyEvent.Chat(
-            mindyEvent.username + ' has ' + account.points + ' points, ' +
+            account.username + ' has ' + account.points + ' points, ' +
             account.joins + ' visits, ' +
             'and was last seen ' + moment(account.lastSeen).fromNow()
         );

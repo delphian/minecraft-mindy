@@ -1,5 +1,32 @@
 module.exports = {
     events: {
+	"!haste": {
+	    command: 'haste',
+            cost: 1,
+            help: 'Increases mining and attack speed.',
+	    responses: [
+		{
+		    delay: 1,
+		    say: {
+		        where: 'minecraft',
+		        text: [
+		    	    '/effect @a haste'
+		        ]
+		    }
+		},
+		{
+		    delay: 0,
+		    say: {
+		        where: 'minecraft',
+			text: [
+			    '$0 has smiled on your life! You feel energized.',
+			    'The demigod $0 blesses you with haste!',
+                            'You feel amazing! Such speed!'
+			]
+		    }
+		}
+	    ]
+	},
         "!day": {
             command: 'day',
             cost: 1,
@@ -66,7 +93,7 @@ module.exports = {
         },
         "!blindness": {
             command: 'blindness',
-            cost: 1,
+            cost: 2,
             help: 'Strike player blind.',
             responses: [
                 {
@@ -93,7 +120,7 @@ module.exports = {
         },
         "!slowness": {
             command: 'slowness',
-            cost: 1,
+            cost: 2,
             help: 'Decreases walking spead.',
             responses: [
                 {
@@ -120,7 +147,7 @@ module.exports = {
         },
         "!mining_fatigue": {
             command: 'mining_fatigue',
-            cost: 1,
+            cost: 2,
             help: 'Decreases mining and attack speed.',
             responses: [
                 {
@@ -146,7 +173,7 @@ module.exports = {
         },
         "!pigman": {
             command: 'pigman',
-            cost: 1,
+            cost: 2,
             help: 'Conjur warrior pigman riding a skeleton horse.',
             responses: [
                 {
@@ -162,7 +189,7 @@ module.exports = {
         },
         "!slime": {
             command: 'slime',
-            cost: 1,
+            cost: 2,
             help: 'Summon evil attack slimes to annoy our adventurer.',
             responses: [
                 {

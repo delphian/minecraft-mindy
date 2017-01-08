@@ -34,6 +34,7 @@ class AccountRepository {
         var account = null;
         if (this.exists(username)) {
             account = new Account(JSON.parse(this.db.get(username)));
+	    account.username = username;
         }
         return account;
     }
@@ -46,6 +47,7 @@ class AccountRepository {
      *  Account object to save.
      */
     update(username, account) {
+        account.username = username;
         this.db.put(username, JSON.stringify(account));
     }
 }
